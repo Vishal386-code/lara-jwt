@@ -18,4 +18,7 @@ use App\Http\Controllers\AuthController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::put('/update/{id}', [AuthController::class, 'update']);
+Route::delete('/destroy/{id}', [AuthController::class, 'destroy']);
+
 Route::get('me', [AuthController::class, 'me'])->middleware('auth:api');

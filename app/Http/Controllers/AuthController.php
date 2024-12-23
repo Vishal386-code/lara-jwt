@@ -149,6 +149,10 @@ class AuthController extends Controller
         }
     }
 
+
+
+
+
     // Get the authenticated user
 
 /**
@@ -173,5 +177,122 @@ class AuthController extends Controller
 public function me() {
     return response()->json(auth()->user());
 }
+      // Update a user’s profile
+    /** 
+     * @OA\Put(
+     *     path="/api/update/{id}",
+     *     summary="Update user profile",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of user to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 required={"name", "email"},
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string",
+     *                     description="User’s name"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="string",
+     *                     description="User’s email"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     type="string",
+     *                     description="User’s password"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User profile updated successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid data"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     )
+     * )
+     */
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string',
+            'email' => 'sometimes|required|string|email|unique:users,email,' . $id,
+            'password' => 'sometimes|required|string|min:6',
+        ]);
+
+
+        if (isset($validated['name'])) {
+            $user->name = $validated['name'];
+        }
+        if (isset($validated['email'])) {
+            $user->email = $validated['email'];
+        }
+        if (isset($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
+        }
+
+        $user->save();
+
+        return response()->json(['message' => 'User updated successfully'], 200);
+    }
+
+    // Destroy a user
+    /** 
+     * @OA\Delete(
+     *     path="/api/destroy/{id}",
+     *     summary="Delete a user",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of user to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     )
+     * )
+     */
+    public function destroy($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $user->delete();
+        return response()->json(['message' => 'User deleted successfully'], 200);
+    }
+
 
 }
