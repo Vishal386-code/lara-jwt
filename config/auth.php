@@ -12,7 +12,6 @@ return [
     | as required, but they're a perfect start for most applications.
     |
     */
-
     'defaults' => [
         'guard' => 'api', // Use API guard for authentication
         'passwords' => 'users', // Default password reset configuration for users
@@ -61,11 +60,6 @@ return [
             'driver' => 'eloquent', // Use Eloquent model for user retrieval
             'model' => App\Models\User::class, // Define the User model
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -107,5 +101,5 @@ return [
     |
     */
 
-    'password_timeout' => 10800, // Time until password confirmation times out (3 hours)
+    'password_timeout' => 10800, // Time unti
 ];

@@ -13,6 +13,64 @@ use App\Http\Controllers\Controller;
 class AuthController extends Controller
 {
     // Register a new user
+
+    /**
+
+    * @OA\Post(
+
+    * path="/api/register",
+
+    * summary="Register a new user",
+
+    * @OA\Parameter(
+
+    * name="name",
+
+    * in="query",
+
+    * description="User’s name",
+
+    * required=true,
+
+    * @OA\Schema(type="string")
+
+    * ),
+
+    * @OA\Parameter(
+
+    * name="email",
+
+    * in="query",
+
+    * description="User’s email",
+
+    * required=true,
+
+    * @OA\Schema(type="string")
+
+    * ),
+
+    * @OA\Parameter(
+
+    * name="password",
+
+    * in="query",
+
+    * description="User’s password",
+
+    * required=true,
+
+    * @OA\Schema(type="string")
+
+    * ),
+
+    * @OA\Response(response="201", description="User registered successfully"),
+
+    * @OA\Response(response="422", description="Validation errors")
+
+    * )
+
+    */
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -31,6 +89,51 @@ class AuthController extends Controller
     }
 
     // Login and get JWT token
+
+
+    /**
+
+    * @OA\Post(
+
+    * path="/api/login",
+
+    * summary="Authenticate user and generate JWT token",
+
+    * @OA\Parameter(
+
+    * name="email",
+
+    * in="query",
+
+    * description="User’s email",
+
+    * required=true,
+
+    * @OA\Schema(type="string")
+
+    * ),
+
+    * @OA\Parameter(
+
+    * name="password",
+
+    * in="query",
+
+    * description="User’s password",
+
+    * required=true,
+
+    * @OA\Schema(type="string")
+
+    * ),
+
+    * @OA\Response(response="200", description="Login successful"),
+
+    * @OA\Response(response="401", description="Invalid credentials")
+
+    * )
+
+    */
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -47,8 +150,28 @@ class AuthController extends Controller
     }
 
     // Get the authenticated user
-    public function me()
-    {
-        return response()->json(auth()->user());
-    }
+
+/**
+ * @OA\Get(
+ *     path="/api/me",
+ *     summary="Get user details",
+ *     @OA\Parameter(
+ *         name="token",
+ *         in="query",
+ *         description="Bearer token",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="string"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success"
+ *     )
+ * )
+ */
+public function me() {
+    return response()->json(auth()->user());
+}
+
 }
